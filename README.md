@@ -43,13 +43,10 @@ And now you are done and ready to solve the daily puzzles :)
 ## Usage
 
 Activate the virtual-environment session by using `.\venv\Scripts\Activate.ps1` on Windows and `source venv/bin/activate` on Linux.
-
 When you are done with the daily puzzle run `deactivate` to stop the virtual-environment.
 
 Run `init_day.py` once per day. It should generate all necessary files and folders. Start by checking if the generated `example.txt` file contains all the input.
-
 Adjust the tests: Put in the example solution for part 1 and the wanted parse output. Try if the tests fail and check thereby if they work.
-
 Now start working on the solution, start with the parse and work yourself down in the template.
 
 ## Authors and acknowledgment
