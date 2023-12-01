@@ -1,2 +1,2 @@
 advent-of-code-data
-browser-cookie3
+pytest
