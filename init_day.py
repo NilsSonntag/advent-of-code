@@ -1,5 +1,6 @@
 import os
 from datetime import date
+from aocd.models import Puzzle
 
 # get date
 today = date.today()
@@ -8,15 +9,28 @@ current_year = today.strftime('%Y')
 
 # create new directory if it doesn't exist yet
 new_directory = os.path.join(current_year, current_day)
-
 current_working_directory = os.getcwd()
-
 assembled_path = os.path.join(current_working_directory, new_directory)
-
 if not os.path.exists(assembled_path):
     os.mkdir(assembled_path)
     print("Created new directory '% s'" % new_directory)
 else:
     print("Directory '%s' already exists" % new_directory)
 
-# 
+# TODO: python template file
+
+# get input.txt
+puzzle = Puzzle(day = int(current_day), year = int(current_year))
+new_input_file = os.path.join(new_directory, "input.txt")
+try:
+    with open(new_input_file, 'w') as input:
+        input.write(puzzle.input_data)
+except FileExistsError:
+    print("The input file '%s' does already exists" % new_input_file)
+except FileNotFoundError:
+    print("The '%s' Directory does not exists" % new_directory)
+
+# TODO: get example.txt
+
+
+# TODO: generate pytest
