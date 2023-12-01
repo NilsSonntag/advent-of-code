@@ -3,9 +3,8 @@
 # NOT TESTED YET
 
 # Install the required packages
-sudo apt update
-sudo apt-get install python
-
+sudo apt-get update
+sudo apt-get install python3-virtualenv
 
 # Create a virtual environment
 python -m venv venv

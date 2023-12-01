@@ -5,4 +5,9 @@ if (-Not $(Test-Path $VENV_DIRECTORY)) {
 } else {
     Write-Host "venv already exists"
 }
-.\venv\Scripts\activate.ps1
+
+# Activate the virtual environment
+.\venv\Scripts\Activate.ps1
+
+# Install the requirements
+pip install -r requirements.txt
