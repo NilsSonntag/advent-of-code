@@ -17,7 +17,7 @@ def solve (lines):
     print(sum)
 
 def transform():
-    input = open("input (1).txt", "r")
+    input = open("input_j.txt", "r")
     lines = [line.rstrip() for line in input]
     res = []
     for line in lines:
