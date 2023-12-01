@@ -1,6 +1,7 @@
 import os
 from datetime import date
 from aocd.models import Puzzle
+import shutil
 
 # get date
 today = date.today()
@@ -17,7 +18,10 @@ if not os.path.exists(assembled_path):
 else:
     print("Directory '%s' already exists" % new_directory)
 
-# TODO: python template file
+# python template file
+template_file = os.path.join(current_working_directory, "src", "template.py")
+destination_and_name = os.path.join(assembled_path, "day"+current_day+".py")
+shutil.copy(template_file, destination_and_name)
 
 # get input.txt
 puzzle = Puzzle(day = int(current_day), year = int(current_year))
