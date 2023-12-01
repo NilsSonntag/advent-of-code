@@ -6,50 +6,26 @@ Solutions to the Advent of Code Puzzles
 
 ## Setup
 
-### Setup venv
-
-Setup venv in your parent directory of this project:
-cd there and use
-
-```ps
-python -m venv venv
-```
-
-Afterwards run
-
-```ps
-venv\Scripts\activate
-```
-
-If that leaves you with a ExecutionPolicy Error run
+Using Windows: 
 
 ```ps
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+.\setup.ps1
 ```
 
-When you want your default Policy (probably Restricted) back, just use
+Using Linux(Ubuntu or other distro with apt): 
 
-```ps
-Set-ExecutionPolicy Default -Scope CurrentUser
-```
-
-If you don't get an error your command line should look like this:
-
-```ps
-(venv) PS <working_directory>
-```
-
-### Install requirements
-
-Continue by installing [requirements](requirements.txt) with pip.
-
-```ps
-(venv) PS> python -m pip install <package-name>
+```sh
+source setup.sh
 ```
 
 ## Usage
 
-WIP
+Activate the virtual-environment session by using `.\venv\Scripts\Activate.ps1` on Windows and `source venv/bin/activate` on Linux.
+
+When you are done with the daily puzzle run `deactivate` to stop the virtual-environment.
+
+(WIP)
 
 Then setup your session cookie: [Guide](https://github.com/wimglenn/advent-of-code-wim/issues/1)
 You probably want to write it in the text file at `~/.config/aocd/token` instead of exporting it to an environment variable.
