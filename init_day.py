@@ -18,9 +18,9 @@ if not os.path.exists(assembled_path):
 else:
     print("Directory '%s' already exists" % new_directory)
 
-# python template file
+# generate python solution file
 template_file = os.path.join(current_working_directory, "src", "template.py")
-destination_and_name = os.path.join(assembled_path, "day"+current_day+".py")
+destination_and_name = os.path.join(assembled_path, "sol"+current_day+".py")
 shutil.copy(template_file, destination_and_name)
 
 # get input.txt
@@ -46,4 +46,9 @@ except FileExistsError:
 except FileNotFoundError:
     print("The '%s' Directory does not exists" % new_example_file)
 
-# TODO: generate pytest
+# generate pytest
+template_file = os.path.join(current_working_directory, "src", "test_template.py")
+destination_and_name = os.path.join(assembled_path, "test_"+current_day+".py")
+shutil.copy(template_file, destination_and_name)
+
+# TODO: adjust import
