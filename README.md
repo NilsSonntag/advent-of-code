@@ -8,16 +8,11 @@ Solutions to the Advent of Code Puzzles
 
 ### Setup venv
 
-Setup venv in your parent directory of this project:
-cd there and use
+Setup a python virtual environment (venv) in your parent directory of this project:
 
 ```ps
+cd ..
 python -m venv venv
-```
-
-Afterwards run
-
-```ps
 venv\Scripts\activate
 ```
 
@@ -36,8 +31,16 @@ Set-ExecutionPolicy Default -Scope CurrentUser
 If you don't get an error your command line should look like this:
 
 ```ps
-(venv) PS <working_directory>
+(venv) PS>
 ```
+
+When you are done with the puzzle of the day you can use 
+
+```ps
+(venv) PS> deactivate
+```
+
+to stop the virtual environment.
 
 ### Install requirements
 
