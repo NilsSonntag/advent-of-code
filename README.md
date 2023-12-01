@@ -47,14 +47,12 @@ Continue by installing [requirements](requirements.txt) with pip.
 (venv) PS> python -m pip install <package-name>
 ```
 
-## Usage
-
-WIP
+### Setup AOCD
 
 Then setup your session cookie: [Guide](https://github.com/wimglenn/advent-of-code-wim/issues/1)
 You probably want to write it in the text file at `~/.config/aocd/token` instead of exporting it to an environment variable.
 
-Now you can use it on the console/terminal by writing `py` to start the python console and then:
+Now you can test it on the console/terminal by writing `py` to start the python console and then:
 
 ```python
 >>> from aocd.models import Puzzle
@@ -64,7 +62,19 @@ Now you can use it on the console/terminal by writing `py` to start the python c
 'dqfournine5four2jmlq'
 ```
 
+If that works you are good to go :)
+
 Other features (not used yet): [Github link](https://github.com/wimglenn/advent-of-code-data)
+
+## Usage
+
+WIP
+
+Run `init_day.py` once per day. It should generate all necessary files and folders. Start by checking if the generated `example.txt` file contains all the input.
+
+Adjust the tests: First you then need to adjust the name of the solution file in the import section of `test_xx.py` (TODO: automate this). Then put in the example solution for part 1 and the wanted parse output. Try if the tests fail and check thereby if they work.
+
+Now start working on the solution, start with the parse and work yourself down in the template.
 
 ## Authors and acknowledgment
 All members
