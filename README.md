@@ -8,7 +8,7 @@ Solutions to the Advent of Code Puzzles
 
 ### Setup venv
 
-Setup a python virtual environment (venv) in your parent directory of this project:
+Setup and start a python virtual environment (venv) in your parent directory of this project:
 
 ```ps
 cd ..
