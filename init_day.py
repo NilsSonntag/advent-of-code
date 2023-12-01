@@ -51,4 +51,11 @@ template_file = os.path.join(current_working_directory, "src", "test_template.py
 destination_and_name = os.path.join(assembled_path, "test_"+current_day+".py")
 shutil.copy(template_file, destination_and_name)
 
-# TODO: adjust import
+# adjust import by replacing template with sol+current_day
+with open(destination_and_name, 'r') as file:
+    filedata = file.read()
+
+filedata = filedata.replace("template", "sol"+current_day)
+
+with open(destination_and_name, 'w') as file:
+    file.write(filedata)
