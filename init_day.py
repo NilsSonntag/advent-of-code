@@ -30,7 +30,16 @@ except FileExistsError:
 except FileNotFoundError:
     print("The '%s' Directory does not exists" % new_directory)
 
-# TODO: get example.txt
-
+# get example.txt
+example_parts = puzzle.examples
+try:
+    for part_number in range(len(example_parts)):
+        new_example_file = os.path.join(new_directory, "example" + str(part_number+1) + ".txt")
+        with open(new_example_file, 'w') as example:
+            example.write(example_parts[part_number].input_data)
+except FileExistsError:
+    print("The input file '%s' does already exists" % new_example_file)
+except FileNotFoundError:
+    print("The '%s' Directory does not exists" % new_example_file)
 
 # TODO: generate pytest
