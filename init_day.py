@@ -59,3 +59,6 @@ filedata = filedata.replace("template", "sol"+current_day)
 
 with open(destination_and_name, 'w') as file:
     file.write(filedata)
+
+# goto working directory
+os.chdir(assembled_path)
