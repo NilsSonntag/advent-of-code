@@ -11,3 +11,8 @@ if (-Not $(Test-Path $VENV_DIRECTORY)) {
 
 # Install the requirements
 pip install -r requirements.txt
+
+# Setup session ID
+$session_id = Read-Host -Prompt 'Enter session ID'
+New-Item -ItemType file -Force -Path ~/.config/aocd/token
+$session_id > ~/.config/aocd/token
