@@ -21,7 +21,8 @@ else:
 # generate python solution file
 template_file = os.path.join(current_working_directory, "src", "template.py")
 destination_and_name = os.path.join(assembled_path, "sol"+current_day+".py")
-shutil.copy(template_file, destination_and_name)
+if not os.path.exists(destination_and_name):
+    shutil.copy(template_file, destination_and_name)
 
 # get input.txt
 puzzle = Puzzle(day = int(current_day), year = int(current_year))
@@ -49,16 +50,14 @@ except FileNotFoundError:
 # generate pytest
 template_file = os.path.join(current_working_directory, "src", "test_template.py")
 destination_and_name = os.path.join(assembled_path, "test_"+current_day+".py")
-shutil.copy(template_file, destination_and_name)
-
-# adjust import by replacing template with sol+current_day
-with open(destination_and_name, 'r') as file:
-    filedata = file.read()
-
-filedata = filedata.replace("template", "sol"+current_day)
-
-with open(destination_and_name, 'w') as file:
-    file.write(filedata)
+if not os.path.exists(destination_and_name):
+    shutil.copy(template_file, destination_and_name)
+    # adjust import by replacing template with sol+current_day
+    with open(destination_and_name, 'r') as file:
+        filedata = file.read()
+        filedata = filedata.replace("template", "sol"+current_day)
+        with open(destination_and_name, 'w') as file:
+            file.write(filedata)
 
 # goto working directory
 os.chdir(assembled_path)
