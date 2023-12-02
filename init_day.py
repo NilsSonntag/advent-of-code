@@ -2,6 +2,14 @@ import os
 from datetime import date
 from aocd.models import Puzzle
 import shutil
+import sys
+
+# arguments
+gen_input_and_example = True
+if len(sys.argv) > 1:
+    if(sys.argv[1] == "-n"):
+        gen_input_and_example = False
+
 
 # get date
 today = date.today()
@@ -23,6 +31,22 @@ template_file = os.path.join(current_working_directory, "src", "template.py")
 destination_and_name = os.path.join(assembled_path, "sol"+current_day+".py")
 if not os.path.exists(destination_and_name):
     shutil.copy(template_file, destination_and_name)
+
+# generate pytest
+template_file = os.path.join(current_working_directory, "src", "test_template.py")
+destination_and_name = os.path.join(assembled_path, "test_"+current_day+".py")
+if not os.path.exists(destination_and_name):
+    shutil.copy(template_file, destination_and_name)
+    # adjust import by replacing template with sol+current_day
+    with open(destination_and_name, 'r') as file:
+        filedata = file.read()
+        filedata = filedata.replace("template", "sol"+current_day)
+        with open(destination_and_name, 'w') as file:
+            file.write(filedata)
+
+# exit if no input and example should be generated
+if not gen_input_and_example:
+    sys.exit()
 
 # get input.txt
 puzzle = Puzzle(day = int(current_day), year = int(current_year))
@@ -46,18 +70,3 @@ except FileExistsError:
     print("The input file '%s' does already exists" % new_example_file)
 except FileNotFoundError:
     print("The '%s' Directory does not exists" % new_example_file)
-
-# generate pytest
-template_file = os.path.join(current_working_directory, "src", "test_template.py")
-destination_and_name = os.path.join(assembled_path, "test_"+current_day+".py")
-if not os.path.exists(destination_and_name):
-    shutil.copy(template_file, destination_and_name)
-    # adjust import by replacing template with sol+current_day
-    with open(destination_and_name, 'r') as file:
-        filedata = file.read()
-        filedata = filedata.replace("template", "sol"+current_day)
-        with open(destination_and_name, 'w') as file:
-            file.write(filedata)
-
-# goto working directory
-os.chdir(assembled_path)
