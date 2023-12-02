@@ -1,4 +1,5 @@
 import pathlib
+import math
 
 PUZZLE_DIR = pathlib.Path(__file__).parent
 RED_MAX = 12
@@ -12,7 +13,6 @@ def parse(puzzle_input):
     for x in range(len(lines)):
         dict[x+1] = lines[x][(lines[x].find(":")+2):]
     return dict
-        
 
 def part1(data):
     """Solve part 1."""
@@ -35,10 +35,25 @@ def part1(data):
     return sum_id
 
         
-
-
 def part2(data):
     """Solve part 2."""
+    sum_power=0
+    for x in range(len(data)+1):
+        if x == 0: continue
+        line = data[x].replace(",", ";")
+        lineN = line.split(";")
+        values = {"red": 0, "green": 0, "blue": 0}
+        for element in lineN:
+            element = element.strip()
+            if element.find("red") != -1:
+                values["red"] = max(int(element.split(" ")[0]), values["red"])
+            elif element.find("green") != -1:
+                values["green"] = max(int(element.split(" ")[0]), values["green"])
+            elif element.find("blue") != -1:
+                values["blue"] = max(int(element.split(" ")[0]), values["blue"])
+        power = values["red"]*values["green"]*values["blue"] 
+        sum_power += power
+    return sum_power
 
 def solve(puzzle_input):
     """Solve the puzzle for the given input."""
