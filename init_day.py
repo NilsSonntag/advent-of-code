@@ -45,7 +45,15 @@ try:
 except FileExistsError:
     print("The input file '%s' does already exists" % new_example_file)
 except FileNotFoundError:
-    print("The '%s' Directory does not exists" % new_example_file)
+    print("The '%s' Directory does not exists" % new_directory)
+try:
+    empty_example_file = os.path.join(new_directory, "example2.txt")
+    with open(empty_example_file, 'w') as example:
+        example.write("")
+        print("Created empty file '%s'. Fill it with the second example when you submitted the first solution" % empty_example_file)
+except FileExistsError:
+    print("The file '%s' is not empty!" % empty_example_file)
+
 
 # generate pytest
 template_file = os.path.join(current_working_directory, "src", "test_template.py")
@@ -58,6 +66,4 @@ if not os.path.exists(destination_and_name):
         filedata = filedata.replace("template", "sol"+current_day)
         with open(destination_and_name, 'w') as file:
             file.write(filedata)
-
-# goto working directory
-os.chdir(assembled_path)
+            
