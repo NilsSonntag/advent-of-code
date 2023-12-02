@@ -25,7 +25,7 @@ You have to put in your sessionID at the end of the setup. Here is how to get it
 2. Right click and choose "Inspect" then navigate to
     - Application on Chrome
     - Network on Safari
-    - ... on Firefox (TODO: Jonathan)
+    - Storage on Firefox
 3. Open Cookies and choose the adventofcode one. There should be one cookie with the name "session". You need to copy that one and paste it into the terminal with Ctrl+Shift+V.
 
 That was it and you can test it on the console/terminal by writing `py` to start the python console and then:
