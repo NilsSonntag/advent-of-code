@@ -147,6 +147,6 @@ def string_to_field(string_in, height, width, index_first=0, index_last=None):
 
 
 if __name__ == "__main__":
-    puzzle_input = (PUZZLE_DIR / "example1.txt").read_text().strip()
+    puzzle_input = (PUZZLE_DIR / "input.txt").read_text().strip()
     solutions = solve(puzzle_input)
     print("\n".join(str(solution) for solution in solutions))
