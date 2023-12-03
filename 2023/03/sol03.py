@@ -49,7 +49,7 @@ def filter2(data):
             if np.char.isdigit(data[i,j]):
                 number = int(data[i,j])
                 len_number=1
-                while(np.char.isdigit(data[i, j+len_number])):
+                while(j+len_number<len(data[0]) and np.char.isdigit(data[i, j+len_number])):
                     number=number*10+int(data[i,j+len_number])
                     len_number+=1
                 arr_of_numbers[i,j:j+len_number]=number
@@ -88,7 +88,6 @@ def part2(data):
                 elem=np.unique(field[i:i+3,j:j+3])
                 remova=np.argwhere(elem==0)
                 elem2 = np.delete(elem, remova).tolist()
-                print(elem2)
                 if len(elem2)==2:
                     result += elem2[0]*elem2[1]
             j += 1
