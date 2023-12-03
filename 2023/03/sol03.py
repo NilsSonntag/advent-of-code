@@ -57,25 +57,6 @@ def filter2(data):
             j+=1
     return arr_of_numbers
 
-"""
-def part2(data):
-    Solve part 2.
-    whole_number_array = filter2(data)
-    field = np.pad(data, 1, mode='constant', constant_values='.').tolist()
-    test = np.zeros((len(field), len(field[0]))).tolist()
-    test = test.tolist()
-    for i in range(len(data)):
-        j = 0
-        for j in range(len(data[0])):
-            if data[i,j] == '*':
-                test[i][j] = 3.3
-                for x in range(i, i+3):
-                    for y in range(j, j+3):
-                        if np.char.isdigit(field[x,y]):
-                            test[x][y] = 5.5
-    
-    print(field.tolist())"""
-
 def part2(data):
     """Solve part 2."""
     result = 0
@@ -85,41 +66,16 @@ def part2(data):
         j = 0
         while j < len(data[0]):
             if data[i,j]=='*':
-                elem=np.unique(field[i:i+3,j:j+3])
-                remova=np.argwhere(elem==0)
-                elem2 = np.delete(elem, remova).tolist()
-                if len(elem2)==2:
-                    result += elem2[0]*elem2[1]
+                numbers, counts=np.unique(field[i:i+3,j:j+3], return_counts=True)
+                remova=np.argwhere(numbers==0)
+                numbers_list = np.delete(numbers, remova).tolist()
+                for i in range(len(numbers_list)):
+                    if counts[i+1] > 3:
+                        numbers_list.append(numbers_list[i])
+                if len(numbers_list)==2:
+                    result += numbers_list[0]*numbers_list[1]
             j += 1
     return result 
-
-    """
-    result = 0
-    gear_storage = {}
-    field = np.pad(data, 1, mode='constant', constant_values='.')
-    for i in range(len(data)):
-        j = 0
-        while j < len(data[0]):
-            if np.char.isdigit(data[i,j]):
-                len_number = 1
-                while(str(field[i+1, j+len_number+1]).isdigit()):
-                    len_number += 1
-                if '*' in field[i:i+3, j:j+len_number+2]:
-                    whole_number = ""
-                    for k in range(len_number):
-                        whole_number = whole_number + data[i,j+k]
-                    indices = np.where(field[i:i+3, j:j+len_number+2] == '*')
-                    print(indices)
-                    gear_storage[indices].append(whole_number)
-                    if(gear_storage > 0):
-                        result += gear_storage * whole_number
-                        gear_storage = 0
-                    else:
-                        gear_storage = whole_number
-                j += len_number
-            j += 1
-    return result              
-    """
 
 def solve(puzzle_input):
     """Solve the puzzle for the given input."""
