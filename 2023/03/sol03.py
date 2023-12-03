@@ -10,24 +10,11 @@ def parse(puzzle_input):
     all_punctuation = string.punctuation
     all_punctuation = all_punctuation.replace(".","#")
     for char in all_punctuation:
-        # for char in (string.punctuation).replace(".","#"))
         puzzle_input = puzzle_input.replace(char, "#")
     width = len(puzzle_input.splitlines()[-1])
     height = len(puzzle_input.splitlines())
     puzzle_input = puzzle_input.replace("\n", "")
     return string_to_field(puzzle_input, width, height)
-
-"""
-def filter (data):
-    filter_array = np.array([[1,1,1],[1,0,1],[1,1,1]])
-    result = np.zeros(data.shape)
-    for i in range(data):
-        field = np.pad(data, 1, mode='constant', constant_values='.')
-        for j in range(len(data[0])):
-            if data[i][j].isDigit():
-                result[i][j] = np.multiply(field[i-1:i+1][j-1:j+1]=='#', filter_array)
-        field = np.where(field!=0, 1, 0)
-"""
 
 def filter (data):
     result =[]
@@ -43,7 +30,6 @@ def filter (data):
                     whole_number = ""
                     for k in range(len_number):
                         whole_number = whole_number + data[i,j+k]
-                    print(whole_number)
                     result.append(int(whole_number))
                 j += len_number
             j += 1
