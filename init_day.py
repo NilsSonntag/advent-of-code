@@ -13,7 +13,7 @@ if len(sys.argv) > 1:
 
 # get date
 today = date.today()
-current_day = 5
+current_day = "05"
 #current_day = today.strftime('%d')
 current_year = today.strftime('%Y')
 
