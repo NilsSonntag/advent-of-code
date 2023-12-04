@@ -18,7 +18,6 @@ def parse(puzzle_input):
         right_part.append(right)
     return (left_part, right_part)
 
-
 def part1(data):
     """Solve part 1."""
     solution = 0
@@ -38,6 +37,18 @@ def part1(data):
 
 def part2(data):
     """Solve part 2."""
+    left_part = data[0]
+    right_part = data[1]
+    scratches = [1]*len(left_part)
+    for i in range(len(left_part)):
+        number = 0
+        for elem in left_part[i]:
+            if elem in right_part[i]:
+                number += 1
+        for j in range(number):
+            if i + j + 1 < len(left_part):
+                scratches[i+j+1] += scratches[i]
+    return sum(scratches)
 
 def solve(puzzle_input):
     """Solve the puzzle for the given input."""
