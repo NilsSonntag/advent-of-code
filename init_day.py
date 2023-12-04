@@ -10,18 +10,11 @@ if len(sys.argv) > 1:
     if(sys.argv[1] == "-n"):
         gen_input_and_example = False
 
-import sys
-
-# arguments
-gen_input_and_example = True
-if len(sys.argv) > 1:
-    if(sys.argv[1] == "-n"):
-        gen_input_and_example = False
-
 
 # get date
 today = date.today()
-current_day = today.strftime('%d')
+current_day = 5
+#current_day = today.strftime('%d')
 current_year = today.strftime('%Y')
 
 # create new directory if it doesn't exist yet

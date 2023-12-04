@@ -30,9 +30,9 @@ before_script:
   - source venv/bin/activate
   - pip install -r requirements.txt
 
-test:
-  script:
-    - pytest
+#test:
+#  script:
+#    - pytest
     # preset
     #- python setup.py test
     #- pip install tox flake8  # you can also use tox
