@@ -74,7 +74,7 @@ def part2(data: List[List[int]]) -> int:
                 current_list_additions, next_list_addition = compute_mapping(seed_tuple, elem)
                 
                 if current_list_additions:
-                    current_list.extend(current_list_addition)
+                    current_list.extend(current_list_additions)
                     changed = True
                 
                 if next_list_addition is not None:
