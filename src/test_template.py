@@ -1,35 +1,36 @@
 import pathlib
 import pytest
 import template as sol
+from typing import Any
 
 PUZZLE_DIR = pathlib.Path(__file__).parent
 
 @pytest.fixture
-def example1():
-    puzzle_input = (PUZZLE_DIR / "example1.txt").read_text().strip()
-    return sol.parse(puzzle_input)
-
-@pytest.fixture
-def example2():
-    puzzle_input = (PUZZLE_DIR / "example2.txt").read_text().strip()
-    return sol.parse(puzzle_input)
+def example(number: int) -> Any:
+    """Read the example{number}.txt file, parse the input, and return a data structure."""
+    try:
+        puzzle_input = (PUZZLE_DIR / f"example{number}.txt").read_text().strip()
+    except FileNotFoundError:
+        print(f"The example{number}.txt file does not exist.")
+    else:
+        return sol.parse(puzzle_input)
 
 @pytest.mark.skip(reason="Not implemented")
-def test_parse_example1(example1):
+def test_parse_example1(example: Any):
     """Test that input is parsed properly."""
-    assert example1 == ...
+    assert example(1) == ...
 
 @pytest.mark.skip(reason="Not implemented")
-def test_part1_example1(example1):
+def test_part1_example1(example: Any):
     """Test part 1 on example1 input."""
-    assert sol.part1(example1) == ...
+    assert sol.part1(example(1)) == ...
 
 @pytest.mark.skip(reason="Not implemented")
-def test_part2_example1(example1):
+def test_part2_example1(example: Any):
     """Test part 2 on example1 input."""
-    assert sol.part2(example1) == ...
+    assert sol.part2(example(1)) == ...
 
 @pytest.mark.skip(reason="Not implemented")
-def test_part2_example2(example2):
+def test_part2_example2(example: Any):
     """Test part 2 on example2 input."""
-    assert sol.part2(example2) == ...
+    assert sol.part2(example(2)) == ...

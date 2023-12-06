@@ -1,111 +1,93 @@
 import pathlib
 import math
 import time
+from typing import List, Tuple
 
 PUZZLE_DIR = pathlib.Path(__file__).parent
 
-def parse_seeds(puzzle_input_seeds):
+def parse_seeds(puzzle_input_seeds: str) -> List[int]:
     """Parse seeds."""
-    seeds_string = puzzle_input_seeds.split(":",1)[1]
-    seeds_numbers = [int(elem) for elem in seeds_string.strip().split()]
-    return seeds_numbers
+    return list(map(int, puzzle_input_seeds.split(":", 1)[1].strip().split()))
 
-def parse_rest(puzzle_input_rest):
+def parse_rest(puzzle_input_rest: List[str]) -> List[List[List[int]]]:
     """Parse rest."""
-    parsed = []
-    for part in puzzle_input_rest:  
-        only_numbers = part.split(":",1)[1].strip().splitlines()
-        parsed.append([[int(elem) for elem in line.strip().split()] for line in only_numbers])
-    return parsed
+    return [[[int(num) for num in line.strip().split()] for line in part.split(":", 1)[1].strip().splitlines()] for part in puzzle_input_rest]
 
-def parse(puzzle_input):
+def parse(puzzle_input: str) -> List[List[int]]:
     """Parse input."""
-    # split the input to get all the parts
     parts = puzzle_input.split("\n\n")
-    
-    seeds_numbers = parse_seeds(parts[0])
-    
-    rest_parts = parse_rest(parts[1:])
-    
-    return [seeds_numbers] + rest_parts
+    return [parse_seeds(parts[0])] + parse_rest(parts[1:])
 
-def part1(data):
-    """Solve part 1."""
+def part1(data: List[List[int]]) -> int:
     seeds = data[0]
     minimum = math.inf
+
     for seed in seeds:
         current_value = seed
-        for i in range(1, len(data)):
-            for elem in data[i]:
-                destination_start = elem[0]
-                source_start = elem[1]
-                range_length = elem[2]
+
+        for mapping in data[1:]:
+            for destination_start, source_start, range_length in mapping:
                 if source_start <= current_value < source_start + range_length:
-                    diff = current_value - source_start
-                    current_value = destination_start + diff
+                    current_value = destination_start + (current_value - source_start)
                     break
-        if current_value < minimum:
-            minimum = current_value
+
+        minimum = min(minimum, current_value)
+
     return minimum
 
-def compute_mapping(seed_tuple, mapping):
-    seed_start, seed_range = seed_tuple
+
+def compute_mapping(seed: Tuple[int, int], mapping: Tuple[int, int, int]) -> Tuple[List[Tuple[int, int]], Tuple[int, int]]:
+    seed_start, seed_range = seed
     destination_start, source_start, range_length = mapping
-    
-    start_value = seed_start
-    range_size = seed_range
-    
+
+    intersection_start = max(seed_start, source_start)
+    intersection_end = min(seed_start + seed_range, source_start + range_length)
+
     current_list_addition = []
     next_list_addition = None
-    
-    # case that the first values are not inside, but some of the other values are inside mapping
-    if source_start > seed_start and source_start <= seed_start + seed_range:
-        start_value = source_start
-        range_size = seed_range - (start_value - seed_start)
-        # add a new subrange that is before the mapping
-        current_list_addition.append((seed_start, seed_range - range_size - 1))
 
-    # case with first value in mapping independent of the rest
-    if source_start <= start_value < source_start + range_length:
-        diff = start_value - source_start
-        diffgreater = start_value + range_size - source_start - range_length
-        next_list_addition = (destination_start + diff, range_size - max(0, diffgreater))
+    if intersection_start < intersection_end:
+        intersection_range = intersection_end - intersection_start
+        next_list_addition = (destination_start + (intersection_start - source_start), intersection_range)
 
-        # some values are greater than the upper bound
-        if diffgreater > 0:
-            current_list_addition.append((seed_start+diffgreater, range_size - diffgreater))
-    
+        if seed_start < intersection_start:
+            current_list_addition.append((seed_start, intersection_start - seed_start))
+
+        if seed_start + seed_range > intersection_end:
+            current_list_addition.append((intersection_end, seed_start + seed_range - intersection_end))
+
     return current_list_addition, next_list_addition
 
-def part2(data):
+def part2(data: List[List[int]]) -> int:
     """Solve part 2."""
     seeds_initial = data[0]
-    minimum = math.inf
     next_list = [(seeds_initial[i],seeds_initial[i+1]) for i in range(0, len(seeds_initial), 2)]    
 
-    for i in range(1, len(data)):
+    for mapping_list in data[1:]:
         current_list = next_list 
         next_list = []
 
         for seed_tuple in current_list:
             changed = False
-            for elem in data[i]:
+            
+            for elem in mapping_list:
                 current_list_additions, next_list_addition = compute_mapping(seed_tuple, elem)
-                if current_list_additions != []:
-                    for list_addition  in current_list_additions:
-                        current_list.append(list_addition)
+                
+                if current_list_additions:
+                    current_list.extend(current_list_additions)
                     changed = True
+                
                 if next_list_addition is not None:
                     next_list.append(next_list_addition)
                     changed = True
+                    
                 if changed:
                     break
+                
             if not changed:
                 next_list.append(seed_tuple)
     
-    # compute minimum
-    minimum = min([current_value[0] for current_value in next_list])
-    return minimum
+    return min(current_value[0] for current_value in next_list)
 
 
 
