@@ -1,4 +1,6 @@
 import pathlib
+import time
+from typing import List, Tuple
 
 PUZZLE_DIR = pathlib.Path(__file__).parent
 
@@ -26,20 +28,38 @@ def part1(data):
 
 def reached_range(time, holding_time):
     return (time-holding_time)*holding_time
-        
 
-def part2(data):
+def to_single_race(data: List[Tuple[int,int]])->Tuple[int,int]:
+    time = "".join(str(item[0]) for item in data)
+    distance = "".join(str(item[1]) for item in data)
+    return (int(time), int(distance))
+
+def part2(data_in):
     """Solve part 2."""
+    res=1
+    time, distance = to_single_race(data_in)
+    err_margin=0
+    for i in range(time):
+        if reached_range(time,i) > distance:
+            err_margin = i
+            break
+    for i in range(time):
+        if reached_range(time,time-i) > distance:
+            err_margin = time-err_margin-i+1
+            break
+    return err_margin
 
 def solve(puzzle_input):
     """Solve the puzzle for the given input."""
     data = parse(puzzle_input)
-    solution1 = part1(data)
+    solution1 = part1(data)	
     solution2 = part2(data)
 
     return solution1, solution2
 
 if __name__ == "__main__":
     puzzle_input = (PUZZLE_DIR / "input.txt").read_text().strip()
+    start = time.time()
     solutions = solve(puzzle_input)
     print("\n".join(str(solution) for solution in solutions))
+    print("And it took", time.time() - start, "seconds to solve.")

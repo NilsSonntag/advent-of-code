@@ -25,10 +25,9 @@ def test_part1_example1(example1):
     """Test part 1 on example1 input."""
     assert sol.part1(example1) == 288
 
-@pytest.mark.skip(reason="Not implemented")
 def test_part2_example1(example1):
     """Test part 2 on example1 input."""
-    assert sol.part2(example1) == ...
+    assert sol.part2(example1) == 71503
 
 @pytest.mark.skip(reason="Not implemented")
 def test_part2_example2(example2):
