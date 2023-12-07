@@ -81,7 +81,7 @@ def find_type_with_joker(hand) -> int:
     order=Counter(hand).keys()
     frequency=list(Counter(hand).values())
     different_cards = len(order) - there_is_a_joker
-    if different_cards==1: return 6
+    if different_cards<=1: return 6
     elif different_cards==2: 
         if (4-amount_of_jokers) in frequency: 
             return 5
