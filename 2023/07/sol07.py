@@ -24,7 +24,6 @@ def part1(data: Any) -> int:
     for index_level in hand_of_index_level:
         index_level.sort(key = hand_value)
         score += calculate_score_from_level(index_level, rank_of_index_level)
-        print(index_level, calculate_score_from_level(index_level, rank_of_index_level))
         rank_of_index_level += len(index_level)
     return score
 
