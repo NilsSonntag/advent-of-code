@@ -37,11 +37,8 @@ write_file(new_input_file, puzzle.input_data)
 # get example.txt
 example_parts = puzzle.examples
 for part_number, example_part in enumerate(example_parts, start=1):
-    new_example_file = new_directory / f"example{part_number}.txt"
+    new_example_file = new_directory / "example.txt"
     write_file(new_example_file, example_part.input_data)
-
-empty_example_file = new_directory / "example2.txt"
-write_file(empty_example_file, "")
 
 # generate pytest
 template_file = Path("src", "test_template.py")
