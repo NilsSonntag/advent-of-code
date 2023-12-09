@@ -8,7 +8,7 @@ def parse(puzzle_input: str) -> Any:
     lines = puzzle_input.splitlines()
     return [[int(element) for element in line.split()] for line in lines]
 
-def toZeroLine(input: List[int]) -> List[List[int]]:
+""" def toZeroLine(input: List[int]) -> List[List[int]]:
     all_zeros = False
     pyramid = [input]
     line_counter = 0
@@ -21,9 +21,9 @@ def toZeroLine(input: List[int]) -> List[List[int]]:
         for i in range(1, len(pyramid[line_counter-1])):
             pyramid[line_counter].append(pyramid[line_counter-1][i]-pyramid[line_counter-1][i-1])
             
-        if sum(pyramid[line_counter]) != 0:
+        if set(pyramid[line_counter]) != {0}:
             all_zeros = False
-            
+    
     return pyramid
 
 def extrapolate(input: List[List[int]]) -> List[List[int]]:
@@ -32,18 +32,27 @@ def extrapolate(input: List[List[int]]) -> List[List[int]]:
     for line_counter in range(2, len(input)+1):
         line_counter *= -1
         input[line_counter].append(input[line_counter+1][-1]+input[line_counter][-1])
-        
+    
     return input
+"""
+
+def extrapolate(input: List[int]) -> int:
+    next_level = []
+    for i in range(len(input)-1):
+        next_level.append(input[i+1]-input[i]) 
+    if set(input) == {0}:
+        return input[-1]
+    else:
+        return extrapolate(next_level)+input[-1]
+
 
 def part1(data: Any) -> int:
     """Solve part 1 of the puzzle for the given data and return the solution."""
     sum_history_value = 0
-    extrapolation_field = [[line] for line in data]
     
     for i in range(len(data)):
-        extrapolation_field[i] = toZeroLine(extrapolation_field[i][0])
-        extrapolation_field[i] = extrapolate(extrapolation_field[i])
-        sum_history_value += extrapolation_field[i][0][-1]
+        history_value = extrapolate(data[i])
+        sum_history_value += history_value
     
     return sum_history_value
 
@@ -60,7 +69,7 @@ def solve(puzzle_input: str) -> Tuple[int, int]:
 
 if __name__ == "__main__":
     try:
-        puzzle_input = (PUZZLE_DIR / "example.txt").read_text().strip()
+        puzzle_input = (PUZZLE_DIR / "example2.txt").read_text().strip()
     except FileNotFoundError:
         print("The input file does not exist.")
     else:
