@@ -51,13 +51,19 @@ def part1(data: Any) -> int:
     sum_history_value = 0
     
     for i in range(len(data)):
-        history_value = extrapolate(data[i])
-        sum_history_value += history_value
+        sum_history_value += extrapolate(data[i])
     
     return sum_history_value
 
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
+    sum_history_value = 0
+    
+    for i in range(len(data)):
+        data[i].reverse()
+        sum_history_value += extrapolate(data[i])
+    
+    return sum_history_value
 
 def solve(puzzle_input: str) -> Tuple[int, int]:
     """Solve the puzzle for the given input and return the solutions for part 1 and part 2."""
