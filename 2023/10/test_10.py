@@ -43,7 +43,6 @@ def test_part1_example2(example2: Any):
     assert sol.part1(example2) == 8
 
 
-@pytest.mark.skip(reason="Not implemented")
 def test_part2_example(example: Any):
     """Test part 2 on example input."""
-    assert sol.part2(example) == ...
+    assert sol.part2(example) == 1

@@ -142,8 +142,41 @@ def part1(data: Any) -> int:
     
     return max(distance_to_start.values())
 
+def remove_not_in_cycle(pipe_graph):
+    only_connected = pipe_graph.copy()
+    stack = []
+    print(only_connected)
+    for position in pipe_graph:
+        stack.append(position)
+        while stack:
+            if len(pipe_graph[stack[0]]) < 2:
+                stack.append(only_connected[stack[0]][0])
+                del only_connected[stack[0]]
+            stack.pop()
+
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
+    pipe_graph = get_graph_of_pipes(data)
+    only_connected = remove_not_in_cycle(pipe_graph)
+    
+    for position in pipe_graph:
+        if len(pipe_graph[position]) < 2:
+            del only_connected[position]
+    
+    print("Hier: "+only_connected)
+    for position in range(len(data)):
+        for line_index in range(len(data[position])):
+            #if (position,line_index) in only_connected:
+             #   data[position] = "#"
+             pass
+    
+    sum_of_inner = 0
+    for line in data:
+        parts= line.split('#')
+        for inner_parts in parts[1::2]:
+            sum_of_inner += len(inner_parts)
+    return sum_of_inner
+
 
 def solve(puzzle_input: str) -> Tuple[int, int]:
     """Solve the puzzle for the given input and return the solutions for part 1 and part 2."""
@@ -155,7 +188,7 @@ def solve(puzzle_input: str) -> Tuple[int, int]:
 
 if __name__ == "__main__":
     try:
-        puzzle_input = (PUZZLE_DIR / "input.txt").read_text().strip()
+        puzzle_input = (PUZZLE_DIR / "example.txt").read_text().strip()
     except FileNotFoundError:
         print("The input file does not exist.")
     else:
