@@ -1,8 +1,11 @@
+from collections import deque
 import pathlib
-from typing import Tuple, Any
+from typing import Tuple, Any, List, Dict
 import numpy as np
+import networkx as nx
 
 PUZZLE_DIR = pathlib.Path(__file__).parent
+
 
 def parse(puzzle_input: str) -> Any:
     """Parse the puzzle input and return a data structure."""
@@ -16,36 +19,6 @@ def get_start_position(data: Any) -> Tuple[int, int]:
             return (line.index("S"), data.index(line))
     return (-1, -1)
 
-def rek_breadth_first_search_for_pipeloop(current_position: Tuple[int, int], data: Any, visited: Any) -> Tuple[int, int]:
-    """Return the position where we first find a loop from start to start"""
-    stack=[]
-    while current_position not in visited:
-        visited.append(current_position)
-        
-        x,y = current_position[0],current_position[1]
-        print(x,y)
-
-        #find all fitting neighbors
-        adders = neighbors_to_add(current_position,data)
-        print(adders)
-
-        #for all the found fitting neighbors, add them to the stack
-        for i in range(0,3):
-            if adders[i]:
-                if i==0:
-                    stack.append((x+1,y))
-                if i==1:
-                    stack.append((x,y+1))
-                if i==2:
-                    stack.append((x-1,y))
-                if i==3:
-                    stack.append((x,y-1))
-
-        #take the next position from the stack
-        current_position= stack.pop()
-    return current_position
-
-
 def neighbors_to_add(current_position: Tuple[int, int], data: Any) -> bool:
     """Return the compatibility of the neighbors to the current position (#).
           3
@@ -56,7 +29,7 @@ def neighbors_to_add(current_position: Tuple[int, int], data: Any) -> bool:
     if data[current_position[0]][current_position[1]] in ["|","7","F","S"]:
         if len(data)>current_position[0]+1 and data[current_position[0]+1][current_position[1]] in ["|","L","J","S"]:
             fits.append(True)
-        else: fitts.append(False)
+        else: fits.append(False)
     else: fits.append(False)
     if data[current_position[0]][current_position[1]] in ["-","F","L","S"]:
         if len(data[0])>current_position[1]+1 and data[current_position[0]][current_position[1]+1] in ["-","J","7","S"]:
@@ -75,28 +48,99 @@ def neighbors_to_add(current_position: Tuple[int, int], data: Any) -> bool:
     else: fits.append(False)
     return fits
 
+"""
+def get_graph_of_pipes(current_position: Tuple[int, int], data: Any) -> Dict[Tuple[int, int], List[Tuple[int, int]]]:
+    Return the position where we first find a loop from start to start
+    visited = []
+    stack=[]
+    graph = {}
+    
+    while current_position not in visited:
+        graph[current_position] = []
+        visited.append(current_position)
+        x,y = current_position
+        print(x,y)
 
-""" def get_graph_of_pipes(pipes: Any) -> Any:
+        #find all fitting neighbors
+        adders = neighbors_to_add(current_position,data)
+        print(adders)
+
+        #for all the found fitting neighbors, add them to the stack
+        for i in range(0,4):
+            if adders[i]:
+                if i==0:
+                    graph[current_position].append((x+1,y))
+                    stack.append((x+1,y))
+                if i==1:
+                    graph[current_position].append((x,y+1))
+                    stack.append((x,y+1))
+                if i==2:
+                    graph[current_position].append((x-1,y))
+                    stack.append((x-1,y))
+                if i==3:
+                    graph[current_position].append((x,y-1))
+                    stack.append((x,y-1))
+
+        #take the next position from the stack
+        current_position= stack.pop()
+        
+    print(graph)
+    return graph
+"""
+
+def get_graph_of_pipes(data: Any) -> Dict[Tuple[int, int], List[Tuple[int, int]]]:
     #Return a graph of the pipes.
     graph = {}
-    for pipe in pipes:
-        graph[pipe] = []
-        nearby= get_list_of_neighbors(pipe)
-    return graph """
+    length = len(data)
+    width = len(data[0])
+    for x in range(length):
+        for y in range(width):
+            adders = neighbors_to_add((x,y),data)
+            
+            if not adders[0] and not adders[1] and not adders[2] and not adders[3]:
+                continue
+                
+            graph[(x,y)] = []
+            if adders[0]:
+                graph[(x,y)].append((x+1,y))
+            if adders[1]:
+                graph[(x,y)].append((x,y+1))
+            if adders[2]:
+                graph[(x,y)].append((x-1,y))
+            if adders[3]:
+                graph[(x,y)].append((x,y-1))
+    
+    return graph
 
-""" def get_list_of_neighbors(TwoDArray):
-    neigh=[]
-    padded=np.pad(TwoDArray,1,constant_values='.')
-    for i in range(len(TwoDArray)):
-        for j in range(len(TwoDArray[0])):
-            area=padded[i:i+3,j:j+3]
-            neigh.append(area.flatten())
-    return neigh """
+def find_shortest_path(graph, start, end, path=[]):
+        path = path + [start]
+        if start == end:
+            return path
+        if start not in graph:
+            return None
+        shortest = None
+        for node in graph[start]:
+            if node not in path:
+                new_path = find_shortest_path(graph, node, end, path)
+                if new_path:
+                    if not shortest or len(new_path) < len(shortest):
+                        shortest = new_path
+        return shortest
 
 
 def part1(data: Any) -> int:
     """Solve part 1 of the puzzle for the given data and return the solution."""
-    return rek_breadth_first_search_for_pipeloop(get_start_position(data),data,[])
+    pipe_graph = get_graph_of_pipes(data)
+    only_connected = pipe_graph.copy()
+    
+    for position in pipe_graph:
+        if len(pipe_graph[position]) < 2:
+            del only_connected[position]
+    
+    nx_graph = nx.Graph(only_connected)
+    distance_to_start = nx.shortest_path_length(nx_graph, get_start_position(data))
+    
+    return max(distance_to_start.values())
 
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
@@ -111,7 +155,7 @@ def solve(puzzle_input: str) -> Tuple[int, int]:
 
 if __name__ == "__main__":
     try:
-        puzzle_input = (PUZZLE_DIR / "example.txt").read_text().strip()
+        puzzle_input = (PUZZLE_DIR / "input.txt").read_text().strip()
     except FileNotFoundError:
         print("The input file does not exist.")
     else:

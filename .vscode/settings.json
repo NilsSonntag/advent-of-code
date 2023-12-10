@@ -6,5 +6,8 @@
     "python.testing.pytestEnabled": true,
     "cSpell.ignoreWords": [
         "aocd"
+    ],
+    "cSpell.words": [
+        "networkx"
     ]
 }

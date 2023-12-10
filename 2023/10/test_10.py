@@ -26,11 +26,13 @@ def example2() -> Any:
         return sol.parse(puzzle_input)
 
 
-def test_parse_example(example: Any,e example2: Any):
+def test_parse_example(example: Any):
     """Test that input is parsed properly."""
     assert example  == [".....",".S-7.",".|.|.",".L-J.","....."]
-    assert example2 == ["..F7.",".FJ|.","SJ.L7","|F--J","LJ..."]
 
+def test_parse_example2(example2: Any):
+    """Test that input is parsed properly."""
+    assert example2  == ["..F7.",".FJ|.","SJ.L7","|F--J","LJ..."]
 
 def test_part1_example(example: Any):
     """Test part 1 on example input."""
