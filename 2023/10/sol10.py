@@ -25,11 +25,11 @@ def rek_breadth_first_search_for_pipeloop(current_position: Tuple[int, int], dat
         x,y = current_position[0],current_position[1]
         print(x,y)
 
-        #find all fitting neighbours
-        adders = neighbours_to_add(current_position,data)
+        #find all fitting neighbors
+        adders = neighbors_to_add(current_position,data)
         print(adders)
 
-        #for all the found fitting neighbours, add them to the stack
+        #for all the found fitting neighbors, add them to the stack
         for i in range(0,3):
             if adders[i]:
                 if i==0:
@@ -46,34 +46,34 @@ def rek_breadth_first_search_for_pipeloop(current_position: Tuple[int, int], dat
     return current_position
 
 
-def neighbours_to_add(current_position: Tuple[int, int], data: Any) -> bool:
-    """Return the compatability of the neighbpurs to the current position (#).
+def neighbors_to_add(current_position: Tuple[int, int], data: Any) -> bool:
+    """Return the compatibility of the neighbors to the current position (#).
           3
         4 # 2
           1
     """
-    fitts=[]
+    fits=[]
     if data[current_position[0]][current_position[1]] in ["|","7","F","S"]:
         if len(data)>current_position[0]+1 and data[current_position[0]+1][current_position[1]] in ["|","L","J","S"]:
-            fitts.append(True)
+            fits.append(True)
         else: fitts.append(False)
-    else: fitts.append(False)
+    else: fits.append(False)
     if data[current_position[0]][current_position[1]] in ["-","F","L","S"]:
         if len(data[0])>current_position[1]+1 and data[current_position[0]][current_position[1]+1] in ["-","J","7","S"]:
-            fitts.append(True)
-        else: fitts.append(False)
-    else: fitts.append(False)
+            fits.append(True)
+        else: fits.append(False)
+    else: fits.append(False)
     if data[current_position[0]][current_position[1]] in ["|","L","J","S"]:
         if current_position[0]>0 and data[current_position[0]-1][current_position[1]] in ["|","F","7","S"]:
-            fitts.append(True)
-        else: fitts.append(False)
-    else: fitts.append(False)
+            fits.append(True)
+        else: fits.append(False)
+    else: fits.append(False)
     if data[current_position[0]][current_position[1]] in ["-","J","7","S"]:
         if current_position[1]>0 and data[current_position[0]][current_position[1]-1] in ["-","L","F","S"]:
-            fitts.append(True)
-        else: fitts.append(False)
-    else: fitts.append(False)
-    return fitts
+            fits.append(True)
+        else: fits.append(False)
+    else: fits.append(False)
+    return fits
 
 
 """ def get_graph_of_pipes(pipes: Any) -> Any:
@@ -81,10 +81,10 @@ def neighbours_to_add(current_position: Tuple[int, int], data: Any) -> bool:
     graph = {}
     for pipe in pipes:
         graph[pipe] = []
-        nearby= get_list_of_neighbours(pipe)
+        nearby= get_list_of_neighbors(pipe)
     return graph """
 
-""" def get_list_of_neighbours(TwoDArray):
+""" def get_list_of_neighbors(TwoDArray):
     neigh=[]
     padded=np.pad(TwoDArray,1,constant_values='.')
     for i in range(len(TwoDArray)):
