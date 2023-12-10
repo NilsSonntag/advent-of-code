@@ -61,8 +61,8 @@ def test_part1_example2(example2: Any):
 def test_part2_example3(example3: Any):
     """Test part 2 on example input."""
     assert sol.part2(example3) == 4
-    
-@pytest.mark.skip("Not implemented yet.")  
+
+@pytest.mark.skip("Not implemented yet.")
 def test_part2_example4(example4: Any):
     """Test part 2 on example input."""
     assert sol.part2(example4) == 8

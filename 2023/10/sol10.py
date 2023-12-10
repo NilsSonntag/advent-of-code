@@ -145,36 +145,82 @@ def part1(data: Any) -> int:
 def remove_not_in_cycle(pipe_graph):
     only_connected = pipe_graph.copy()
     stack = []
-    print(only_connected)
+    
     for position in pipe_graph:
         stack.append(position)
+        
         while stack:
+            
             if len(pipe_graph[stack[0]]) < 2:
                 stack.append(only_connected[stack[0]][0])
                 del only_connected[stack[0]]
             stack.pop()
+    return only_connected
+
+def rows_to_columns(data: Any) -> Any:
+    """Return the data structure with rows and columns swapped."""
+    return ["".join(row) for row in zip(*data)]
+
+""" 
+def count_hashtags(data: Any) -> List[List[int]]:
+    #Return the number of hashtags in the data structure
+    counted = [[0 for col in range(data[0])] for row in range(data)]
+    for row in data:
+        for elem in row:
+            if elem == "#":
+                counted[data.index(row),row.index(elem):] += 1
+    return counted
+"""
+
+def possible_in(data: Any) -> List[Tuple[int, int]]:
+    result = []
+    #counted_hashtags = count_hashtags(data)
+    
+    for line in data:
+        parts = line.split('#')
+        
+        columns = []
+        for i in range(len(parts)):
+            current_col = sum(len(parts[j])+1 for j in range(0,i))
+            if parts[i] != '':
+                columns.append(current_col)
+        
+        parts = list(filter(lambda a: a != '', parts)) 
+        
+        i = 1
+        while i in range(len(parts)):
+            #calc current_col 
+            current_col = columns[i] #TODO: check if this is correct 
+            
+            for a in range(len(parts[i])):
+                result.append((data.index(line), current_col+a))
+            
+            i += 2
+    
+    return result
 
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
     pipe_graph = get_graph_of_pipes(data)
     only_connected = remove_not_in_cycle(pipe_graph)
+
+    for position in only_connected:
+        x,y = position
+        data[x]=data[x][:y]+"#"+data[x][y+1:]
     
-    for position in pipe_graph:
-        if len(pipe_graph[position]) < 2:
-            del only_connected[position]
+    possible_in_rows = possible_in(data)
     
-    print("Hier: "+only_connected)
-    for position in range(len(data)):
-        for line_index in range(len(data[position])):
-            #if (position,line_index) in only_connected:
-             #   data[position] = "#"
-             pass
+    cols = rows_to_columns(data)
+    temp = possible_in(cols)
+    possible_in_cols = [(y,x) for x,y in temp]
     
     sum_of_inner = 0
-    for line in data:
-        parts= line.split('#')
-        for inner_parts in parts[1::2]:
-            sum_of_inner += len(inner_parts)
+    
+    for position in possible_in_rows:
+            if position in possible_in_cols:
+                print(position)
+                sum_of_inner += 1
+    
     return sum_of_inner
 
 
@@ -188,7 +234,7 @@ def solve(puzzle_input: str) -> Tuple[int, int]:
 
 if __name__ == "__main__":
     try:
-        puzzle_input = (PUZZLE_DIR / "example.txt").read_text().strip()
+        puzzle_input = (PUZZLE_DIR / "example3.txt").read_text().strip()
     except FileNotFoundError:
         print("The input file does not exist.")
     else:
