@@ -199,14 +199,18 @@ def possible_in(data: Any) -> List[Tuple[int, int]]:
     
     return result
 
-def part2(data: Any) -> int:
-    """Solve part 2 of the puzzle for the given data and return the solution."""
-    pipe_graph = get_graph_of_pipes(data)
-    only_connected = remove_not_in_cycle(pipe_graph)
+def circuit_to_hashtags(data: list[str], circuit: dict[tuple[int,int],list[tuple[int,int]]]) -> list[str]:
+    only_connected = remove_not_in_cycle(circuit)
 
     for position in only_connected:
         x,y = position
         data[x]=data[x][:y]+"#"+data[x][y+1:]
+    
+    return data
+
+def part2(data: Any) -> int:
+    """Solve part 2 of the puzzle for the given data and return the solution."""
+    data = circuit_to_hashtags(data, get_graph_of_pipes(data))
     
     possible_in_rows = possible_in(data)
     

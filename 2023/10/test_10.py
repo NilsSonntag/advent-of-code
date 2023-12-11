@@ -30,7 +30,7 @@ def example3() -> Any:
     try:
         puzzle_input = (PUZZLE_DIR / "example3.txt").read_text().strip()
     except FileNotFoundError:
-        print("The example.txt file does not exist.")
+        print("The example3.txt file does not exist.")
     else:
         return sol.parse(puzzle_input)
     
@@ -40,7 +40,17 @@ def example4() -> Any:
     try:
         puzzle_input = (PUZZLE_DIR / "example4.txt").read_text().strip()
     except FileNotFoundError:
-        print("The example2.txt file does not exist.")
+        print("The example4.txt file does not exist.")
+    else:
+        return sol.parse(puzzle_input)
+    
+@pytest.fixture
+def example5() -> Any:
+    """Read the example5.txt file, parse the input, and return a data structure."""
+    try:
+        puzzle_input = (PUZZLE_DIR / "example5.txt").read_text().strip()
+    except FileNotFoundError:
+        print("The example5.txt file does not exist.")
     else:
         return sol.parse(puzzle_input)
 
@@ -57,6 +67,9 @@ def test_part1_example(example: Any):
 def test_part1_example2(example2: Any):
     """Test part 1 on example input."""
     assert sol.part1(example2) == 8
+    
+def test_cicuit(example3: Any):
+    assert sol.circuit_to_hashtags(example3, sol.get_graph_of_pipes(example3)) == sol.parse((PUZZLE_DIR / "example3_circuit.txt").read_text().strip())
 
 def test_part2_example3(example3: Any):
     """Test part 2 on example input."""
