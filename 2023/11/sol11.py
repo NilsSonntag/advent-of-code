@@ -49,22 +49,30 @@ def distance_between_points(point1: Tuple[int, int], point2: Tuple[int, int]) ->
     """Return the distance between the given points."""
     return abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
 
+def calculate_sum_of_distances(data: list[str]) -> int:
+    """Return the sum of distances between all points in the given data structure."""
+    sum_of_distances = 0
+    galaxies = find_galaxies(data)
+    for galaxy in galaxies:
+        for galaxy2 in galaxies:
+            if galaxy == galaxy2:
+                continue
+            sum_of_distances += distance_between_points(galaxy, galaxy2)
+    return sum_of_distances // 2
 
 def part1(data: list[str]) -> int:
     """Solve part 1 of the puzzle for the given data and return the solution."""
     expanded = expand_the_universe(data)
     galaxies = find_galaxies(expanded)
     
-    sum_shortest_path = 0
-    for galaxy in galaxies:
-        for galaxy2 in galaxies:
-            if galaxy == galaxy2:
-                continue
-            sum_shortest_path += distance_between_points(galaxy, galaxy2)
-    return sum_shortest_path // 2
+    return calculate_sum_of_distances(expanded)
 
-def part2(data: list[str]) -> int:
+def part2(data: list[str], multiply_by: int = 1000000) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
+    distance_between_points_initial = calculate_sum_of_distances(data)
+    distance_between_points_expaned_once = part1(data)
+    difference = distance_between_points_expaned_once-distance_between_points_initial
+    return distance_between_points_initial + difference * (multiply_by-1)
 
 def solve(puzzle_input: str) -> Tuple[int, int]:
     """Solve the puzzle for the given input and return the solutions for part 1 and part 2."""
