@@ -54,8 +54,53 @@ def part1(data: tuple[list[str], list[list[int]]]) -> int:
     
     return total
 
-def part2(data: Any) -> int:
+def unfold(data: tuple[list[str], list[list[int]]]) -> tuple[list[str], list[list[int]]]:
+    """Unfold the given data structure."""
+    springs, error_struct = data
+    new_springs = []
+    for spring in springs:
+        new_springs.append('?'.join([spring,spring,spring,spring,spring]))
+    new_error_struct = []
+    for error in error_struct:
+        new_error_struct.append(error*5) 
+    return new_springs, new_error_struct
+
+DP_TABLE = {}
+
+def calc_possible_configs(springs, error_struct, operational, damaged, lenght_of_current) -> int:
+    """Calculate the number of possible configurations."""
+    position_key=(operational, damaged, lenght_of_current)
+    if position_key in DP_TABLE:
+        return DP_TABLE[position_key]
+    if operational == len(springs):
+        if damaged == len(error_struct) and lenght_of_current == 0:
+            return 1
+        elif damaged == len(error_struct)-1 and error_struct[damaged] == lenght_of_current:
+            return 1
+        else:
+            return 0
+    val=0
+    for crackter in ".#":
+        if springs[operational] == crackter or springs[operational] == "?":
+            if crackter=='.' and lenght_of_current==0:
+                val+=calc_possible_configs(springs, error_struct, operational+1, damaged,0)
+            elif crackter=='.' and lenght_of_current>0 and damaged<len(error_struct) and lenght_of_current==error_struct[damaged]:
+                val+=calc_possible_configs(springs, error_struct, operational+1, damaged+1,0)
+            elif crackter=='#':
+                val+=calc_possible_configs(springs, error_struct, operational+1, damaged,lenght_of_current+1)
+    DP_TABLE[position_key]=val
+    return val
+
+def part2(data: tuple[list[str], list[list[int]]]) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
+    springs, error_struct = unfold(data)
+    res =0
+    for spring in springs:
+        DP_TABLE.clear()
+        res+=calc_possible_configs(spring, error_struct[springs.index(spring)], 0, 0, 0)
+        print(spring, error_struct[springs.index(spring)], res)
+    return res
+
 
 def solve(puzzle_input: str) -> Tuple[int, int]:
     """Solve the puzzle for the given input and return the solutions for part 1 and part 2."""
