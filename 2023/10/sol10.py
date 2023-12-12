@@ -208,7 +208,7 @@ def circuit_to_hashtags(data: list[str], circuit: dict[tuple[int,int],list[tuple
     
     return data
 
-def part2(data: Any) -> int:
+def part2_first(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
     data = circuit_to_hashtags(data, get_graph_of_pipes(data))
     
@@ -225,6 +225,50 @@ def part2(data: Any) -> int:
                 print(position)
                 sum_of_inner += 1
     
+    return sum_of_inner
+
+def check_elem_inside(data,row,column):
+    #cols = rows_to_columns(data)
+    num_border_crosses = 0
+    i=0
+    if data[row][column] == "#": return False
+    while i < column:
+        if not data[row][i] == "#":
+            i+=1
+        elif data[row][i] == "#":
+            #go till last # of this block
+            l=1
+            while i+l<len(data[row]) and data[row][i+l] == "#":
+                l+=1
+            #check if this block is a border_cross
+            start_direction, end_direction = '', ''
+            if row-1>=0 and data[row-1][i] == "#":
+                start_direction+='u'
+            if row+1<len(data) and data[row+1][i] == "#": start_direction += 'd'
+            if row-1>0 and data[row-1][i+l] == "#":
+                end_direction += 'u'
+            if row+1<len(data) and data[row+1][i+l-1] == "#":
+                end_direction += 'd'
+            if start_direction != end_direction:
+                num_border_crosses += 1
+                print("border_cross at",row,i)
+            elif start_direction==end_direction and start_direction=='ud':
+                num_border_crosses +=1
+                l=1
+            i+=l
+    return (num_border_crosses % 2 == 1)
+
+
+def part2(data: Any) -> int:
+    data = circuit_to_hashtags(data, get_graph_of_pipes(data))
+    cols = rows_to_columns(data)
+    sum_of_inner = 0
+    for row in data:
+        for i in range(len(row)):
+            is_in= check_elem_inside(data,data.index(row),i)*1
+            if is_in: print("inside detected: ", data.index(row),i)
+            sum_of_inner += is_in
+
     return sum_of_inner
 
 
