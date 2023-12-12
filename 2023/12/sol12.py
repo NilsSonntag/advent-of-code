@@ -97,9 +97,10 @@ def part2(data: tuple[list[str], list[list[int]]]) -> int:
     res =0
     for spring in springs:
         DP_TABLE.clear()
-        res+=calc_possible_configs(spring, error_struct[springs.index(spring)], 0, 0, 0)
-        print(spring, error_struct[springs.index(spring)], res)
-    return res
+        res_new = calc_possible_configs(spring, error_struct[springs.index(spring)], 0, 0, 0)
+        res+=res_new
+        print(spring, error_struct[springs.index(spring)],res_new , res)
+        return res
 
 
 def solve(puzzle_input: str) -> Tuple[int, int]:
@@ -112,7 +113,7 @@ def solve(puzzle_input: str) -> Tuple[int, int]:
 
 if __name__ == "__main__":
     try:
-        puzzle_input = (PUZZLE_DIR / "input.txt").read_text().strip()
+        puzzle_input = (PUZZLE_DIR / "example2.txt").read_text().strip()
     except FileNotFoundError:
         print("The input file does not exist.")
     else:
