@@ -1,6 +1,5 @@
 import pathlib
 from typing import Tuple, Any
-import jellyfish
 
 PUZZLE_DIR = pathlib.Path(__file__).parent
 
