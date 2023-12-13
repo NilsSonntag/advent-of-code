@@ -67,7 +67,6 @@ def find_mirror_smudge_horizontal(data) -> int:
                     break
             is_mirror = True
         if is_mirror and changes_due == 0:
-            print(i+1)
             return i+1
     return -1
 
