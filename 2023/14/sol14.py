@@ -40,15 +40,13 @@ def part1(data: Any) -> int:
         weight+=calculate_weight(line)
     return weight
 
-def turn_matrix_left(data: Any) -> Any:
-    """Turn the matrix left."""
-    #data_new = data.copy()
-    data_new = ["" for i in range(len(data))]
-    for i in range(len(data)):
-        for j in range(len(data)):
-            #print(i,j, data[-(j+1)][i])
-            data_new[i] += data[j][-(i+1)]
-        #data_new[i] = data[-(i+1)][::-1]
+
+def turn_matrix_right(data: Any) -> Any:
+    """Turn the matrix right."""
+    data_new = data.copy()
+    data_new = transpose(data_new)
+    for i in range(len(data_new)):
+        data_new[i] = data_new[i][::-1]
     return data_new
 
 def move_all_stones(data: Any) -> Any:
@@ -58,27 +56,40 @@ def move_all_stones(data: Any) -> Any:
         data_new[i] = move_stones_north(data[i])
     return data_new
 
+def print_matrix(data: Any) -> None:
+    """Print the matrix."""
+    for line in data:
+        print(line)
+
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
     start_position = data
     weight=0
     i=0
     found_cycle=False
+    cycle_length=0
+    end_position = start_position
+    list_of_positions=[]
     while i<1000000000 and not found_cycle:
         position_new = start_position
         for j in range(4):
             transposed=move_all_stones(transpose(position_new))
             position_new = transpose(transposed)
-            print("Old: ",position_new)
-            position_new = turn_matrix_left(position_new)
-            print("New: ",position_new)
-        if start_position == position_new:
+            position_new = turn_matrix_right(position_new)
+        print("New:----------------------------------------------------------------------------------------------------")
+        print_matrix(position_new)
+        if position_new in list_of_positions:
             found_cycle=True
+            cycle_length = len(list_of_positions)-list_of_positions.index(position_new)
+            print("Found cycle at: ",i,"for cycle length: ",cycle_length)
         else:
+            list_of_positions.append(position_new)
             start_position = position_new
         i+=1
-        #print(start_position)
-    for line in start_position:
+    positions_till_end = (1000000000-i)%cycle_length
+    print("Positions till end: ",positions_till_end)
+    end_position = list_of_positions[-cycle_length+positions_till_end]
+    for line in transpose(end_position):
         weight+=calculate_weight(line)
     return weight
 
@@ -92,7 +103,7 @@ def solve(puzzle_input: str) -> Tuple[int, int]:
 
 if __name__ == "__main__":
     try:
-        puzzle_input = (PUZZLE_DIR / "example.txt").read_text().strip()
+        puzzle_input = (PUZZLE_DIR / "input.txt").read_text().strip()
     except FileNotFoundError:
         print("The input file does not exist.")
     else:

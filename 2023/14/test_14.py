@@ -17,7 +17,7 @@ def example() -> Any:
 
 def test_parse_example(example: Any):
     """Test that input is parsed properly."""
-    list = ["O....#....", "O.OO#....#", ".....##...", "OO.#O....O", ".O.....O#.","O.#..O.#.#", "..O..#O..O", ".......O..", "#....###..", "#OO..#...."]
+    list = ["O....#....","O.OO#....#",".....##...","OO.#O....O",".O.....O#.","O.#..O.#.#","..O..#O..O",".......O..","#....###..","#OO..#...."]
     assert example == list
 
 def test_part1_example(example: Any):
