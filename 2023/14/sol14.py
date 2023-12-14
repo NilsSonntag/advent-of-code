@@ -40,8 +40,47 @@ def part1(data: Any) -> int:
         weight+=calculate_weight(line)
     return weight
 
+def turn_matrix_left(data: Any) -> Any:
+    """Turn the matrix left."""
+    #data_new = data.copy()
+    data_new = ["" for i in range(len(data))]
+    for i in range(len(data)):
+        for j in range(len(data)):
+            #print(i,j, data[-(j+1)][i])
+            data_new[i] += data[j][-(i+1)]
+        #data_new[i] = data[-(i+1)][::-1]
+    return data_new
+
+def move_all_stones(data: Any) -> Any:
+    """Move all stones."""
+    data_new = data.copy()
+    for i in range(len(data)):
+        data_new[i] = move_stones_north(data[i])
+    return data_new
+
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
+    start_position = data
+    weight=0
+    i=0
+    found_cycle=False
+    while i<1000000000 and not found_cycle:
+        position_new = start_position
+        for j in range(4):
+            transposed=move_all_stones(transpose(position_new))
+            position_new = transpose(transposed)
+            print("Old: ",position_new)
+            position_new = turn_matrix_left(position_new)
+            print("New: ",position_new)
+        if start_position == position_new:
+            found_cycle=True
+        else:
+            start_position = position_new
+        i+=1
+        #print(start_position)
+    for line in start_position:
+        weight+=calculate_weight(line)
+    return weight
 
 def solve(puzzle_input: str) -> Tuple[int, int]:
     """Solve the puzzle for the given input and return the solutions for part 1 and part 2."""
@@ -53,7 +92,7 @@ def solve(puzzle_input: str) -> Tuple[int, int]:
 
 if __name__ == "__main__":
     try:
-        puzzle_input = (PUZZLE_DIR / "input.txt").read_text().strip()
+        puzzle_input = (PUZZLE_DIR / "example.txt").read_text().strip()
     except FileNotFoundError:
         print("The input file does not exist.")
     else:
