@@ -27,6 +27,16 @@ def split_string(string: str) -> list[str]:
     """Split the given string into a list of strings. Seperated by the caracter '-' or '='"""
     return string.split("-") if "-" in string else string.split("=")
 
+def print_boxes(boxes: dict[int, list[str]]) -> None:
+    """Print the given boxes."""
+    for box in boxes:
+        if box<10:
+            print("Box   ",box,": ",boxes[box])
+        elif box<100:
+            print("Box  ",box,": ",boxes[box])
+        else:
+            print("Box ",box,": ",boxes[box])
+
 def part2(data: list[str]) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
     boxes = {}
@@ -56,7 +66,7 @@ def part2(data: list[str]) -> int:
         elif label_index is not None:
             del boxes[box_index][label_index]
     
-    print(boxes)
+    print_boxes(boxes)
     
     sum_of_powers=0
     for box in boxes:
