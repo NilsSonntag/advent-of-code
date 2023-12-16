@@ -70,8 +70,8 @@ def get_visited_martix() -> Any:
             visits[x].append(1 if sum(y)>0 else 0)
     return visits
 
-def part1(data: Any) -> int:
-    """Solve part 1 of the puzzle for the given data and return the solution."""
+def reset_visited(data: Any):
+    """Reset the visited matrix."""
     global visited
     visits=[]
     for i in range(len(data)):
@@ -79,17 +79,51 @@ def part1(data: Any) -> int:
         for j in range(len(data[i])):
             visits[i].append([False for _ in range(4)])
     visited = visits
+
+def part1(data: Any) -> int:
+    """Solve part 1 of the puzzle for the given data and return the solution."""
+    reset_visited(data)
     follow_beam(data,0,0,0)
     print_matrix(get_visited_martix())
+    ans=0
+    return get_num_of_visited()
+
+def get_num_of_visited() -> int:
     ans=0
     for x in visited:
         for y in x:
             ans += 1 if sum(y)>0 else 0
     return ans
 
-
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
+    maximum = 0
+    for i in range(2*len(data)):
+        #test all row starts and ends
+        left = i<len(data)
+        place = i % len(data)
+        reset_visited(data)
+        follow_beam(data,place,0 if left else len(data)-1,0 if left else 2)
+        test_result = get_num_of_visited()
+
+        if test_result > maximum:
+            maximum = test_result
+            print_matrix(get_visited_martix())
+            print(f"New row maximum: {maximum} at {i}")
+    
+    for i in range(len(data[0])):
+        #test all column starts and ends
+        top = i<len(data[0])
+        place = i % len(data[0])
+        reset_visited(data)
+        follow_beam(data,0 if top else len(data[0])-1,place,1 if top else 3)
+        test_result = get_num_of_visited()
+
+        if test_result > maximum:
+            maximum = test_result
+            print_matrix(get_visited_martix())
+            print(f"New column maximum: {maximum} at {i}")
+    return maximum
 
 def solve(puzzle_input: str) -> Tuple[int, int]:
     """Solve the puzzle for the given input and return the solutions for part 1 and part 2."""
