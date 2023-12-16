@@ -111,7 +111,7 @@ def part2(data: Any) -> int:
             print_matrix(get_visited_martix())
             print(f"New row maximum: {maximum} at {i}")
     
-    for i in range(len(data[0])):
+    for i in range(2*len(data[0])):
         #test all column starts and ends
         top = i<len(data[0])
         place = i % len(data[0])
@@ -135,7 +135,7 @@ def solve(puzzle_input: str) -> Tuple[int, int]:
 
 if __name__ == "__main__":
     try:
-        puzzle_input = (PUZZLE_DIR / "input.txt").read_text().strip()
+        puzzle_input = (PUZZLE_DIR / "input_niels.txt").read_text().strip()
     except FileNotFoundError:
         print("The input file does not exist.")
     else:
