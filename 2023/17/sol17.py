@@ -1,5 +1,6 @@
 import pathlib
 from typing import Tuple, Any
+import heapq as hq
 
 PUZZLE_DIR = pathlib.Path(__file__).parent
 
@@ -7,6 +8,8 @@ def parse(puzzle_input: str) -> Any:
     """Parse the puzzle input and return a data structure."""
     return puzzle_input.splitlines()
 
+# dist, x, y, px, py, moves_in_one_direction
+ALREADY_SEEN = set()
 
 SHORTEST_PATH_FROM_START = {}
 
@@ -31,36 +34,34 @@ def get_neighbors(data,coordinate : Tuple[int,int]):
             if i != 0 and j != 0:
                 if 0 <= coordinate[0] + i < len(data) and 0 <= coordinate[1] + j < len(data[0]):  
                     neighbors.append((coordinate[0] + i, coordinate[1] + j))
-    for neighbor in neighbors:
-        if SHORTEST_PATH_FROM_START[neighbor][0] > SHORTEST_PATH_FROM_START[coordinate][0] + data[neighbor[0]][neighbor[1]]:
-            SHORTEST_PATH_FROM_START[neighbor][0] = SHORTEST_PATH_FROM_START[coordinate][0] + data[neighbor[0]][neighbor[1]]
-            SHORTEST_PATH_FROM_START[neighbor][1] = coordinate
-        if neighbor not in D_POSSIBLE_NEXT_NODES and SHORTEST_PATH_FROM_START[neighbor][0] != int(1e9):
-            D_POSSIBLE_NEXT_NODES[neighbor] = SHORTEST_PATH_FROM_START[coordinate][0] + data[neighbor[0]][neighbor[1]]
+    return neighbors
+
 
 
 
 def part1(data: Any) -> int:
     """Solve part 1 of the puzzle for the given data and return the solution. Basically dijkstra"""
-    init_shortest_path_from_start(data)
-    curr = (0,0)
-    exit_found = False
-    while not exit_found:
-        get_neighbors(data,curr)
-        # sorts the dict by size
-        D_POSSIBLE_NEXT_NODES= dict(sorted(D_POSSIBLE_NEXT_NODES.items(), key=lambda item: item[1][0]))
-        # get the element with the smallest distance
-        next_elem = D_POSSIBLE_NEXT_NODES.popitem()
-        SHORTEST_PATH_FROM_START[next_elem[0]] = next_elem[1]
-        curr = next_elem[0]
-        if curr = (data.length-1,data[0].length-1):
-            exit_found = True
-    return SHORTEST_PATH_FROM_START[curr][0]
+    prioqueue = [(0, 0, 0, 0, 0, 0)]
 
+    while prioqueue:
+        dist, x, y, dx, dy, moves_in_one_direction = hq.heappop(prioqueue)
+        # print(dist, x, y, dx, dy, moves_in_one_direction)
+        if x == len(data) - 1 and y == len(data[0]) - 1:
+            return dist
+        
+        if (x, y, dx, dy, moves_in_one_direction) in ALREADY_SEEN:
+            continue
+        
+        ALREADY_SEEN.add((x, y, dx, dy, moves_in_one_direction))
+
+        if moves_in_one_direction < 3 and (dx,dy) != (0,0) and 0 <= x + dx < len(data) and 0 <= y + dy < len(data[0]):
+            hq.heappush(prioqueue, (dist + int(data[x + dx][y + dy]), x + dx, y + dy, dx, dy, moves_in_one_direction + 1))
+
+        for (ndx, ndy) in [(-1,0),(0,-1),(1,0),(0,1)]:
+            if 0 <= x + ndx < len(data) and 0 <= y + ndy < len(data[0]) and (ndx, ndy) != (dx, dy) and (-ndx, -ndy) != (dx, dy):
+                hq.heappush(prioqueue, (dist + int(data[x + ndx][y + ndy]), x + ndx, y + ndy, ndx, ndy, 1))
     
-        
-        
-        
+    return -1
 
 
 def part2(data: Any) -> int:

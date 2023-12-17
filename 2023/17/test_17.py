@@ -20,7 +20,7 @@ def test_parse_example(example: Any):
     """Test that input is parsed properly."""
     assert example == ...
 
-@pytest.mark.skip(reason="Not implemented")
+
 def test_part1_example(example: Any):
     """Test part 1 on example input."""
     assert sol.part1(example) == 102
