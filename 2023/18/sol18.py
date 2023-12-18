@@ -80,14 +80,15 @@ def dig_out_interior(ground:list[str]) -> list[str]:
             
             #cases where value at j is '#'
             #case length of 1
-            if j >= len(ground[0]) or ground[i][j+1] == '.':
+            if j == len(ground[0])-1 or ground[i][j+1] == '.':
                 border_traversions += 1
+                j+=1
                 continue
 
             #case length >1
             front_up = True if (i>0 and ground[i-1][j] =='#') else False
             end =False
-            while j<len(ground[0]) and not end:
+            while j<len(ground[0])-1 and not end:
                 if ground[i][j+1] == '.':
                     end =True
                 else:
@@ -95,9 +96,9 @@ def dig_out_interior(ground:list[str]) -> list[str]:
 
             if ground[i-1][j] == '#':
                 if not front_up:
-                    hole_count += 1
+                    border_traversions += 1
             elif front_up:
-                hole_count += 1
+                border_traversions += 1
             
             j+=1
 
