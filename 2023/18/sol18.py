@@ -66,35 +66,36 @@ def print_matrix(matrix: list[str]) -> None:
         print(matrix[i])
 
 def dig_out_interior(ground:list[str]) -> list[str]:
+    digged = ground.copy()
     for i in range(1,len(ground)):
-        hole_count = 0
+        border_traversions = 0
         front_up = False
-        front_down = False
-        for j in range(len(ground[0])):
+        j=0
+        while  j in range(len(ground[0])):
             if ground[i][j] == ".":
-                if hole_count % 2 == 1:
-                    ground[i] = replace_at_index(ground[i],j,"#")
-                front_down = False
-                front_up = False
+                if border_traversions % 2 == 1:
+                    digged[i] = replace_at_index(digged[i],j,"#")
+                j+=1
                 continue
             
-            if j+1 >= len(ground[0]):
-                continue
+            #cases where value at j is '#'
             
-            if not front_down and not front_up:
-                if i-1 >= 0 and ground[i-1][j] == "#":
-                    front_up = True
-                if i+1 < len(ground) and ground[i+1][j] == "#":
-                    front_down = True
-            
-            if ground[i][j+1] == "#":
-                continue
-            
-            if i-1 >= 0 and ground[i-1][j] == "#" and front_down:
+
+            front_up = True if (i>0 and ground[i-1][j] =='#') else False
+            end =False
+            while j<len(ground[0]) and not end:
+                if ground[i][j+1] == '#':
+                    end =True
+                else:
+                    j+=1
+
+            if ground[i-1][j] == '#':
+                if not front_up:
+                    hole_count += 1
+            elif front_up:
                 hole_count += 1
             
-            if i+1 < len(ground) and ground[i+1][j] == "#" and front_up:
-                hole_count += 1
+            j+=1
 
     return ground
 
@@ -108,18 +109,6 @@ def part1(data: list[tuple[str,int,list]]) -> int:
     
     return 0
 
-"""
-..####..###.
-..#..#..#.#.
-###..####.#.
-#.........#.
-"""
-"""
-..####..###.
-..#..#..#.#.
-#########.##
-#.........#.
-"""
 
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
