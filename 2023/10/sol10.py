@@ -240,7 +240,7 @@ def check_elem_inside(data,row,column):
             l=1
             while i+l<len(data[row]) and data[row][i+l] == "#":
                 l+=1
-            #check if this block is a border_cross
+            #check if this block is a border_crossing
             start_direction, end_direction = '', ''
             if row-1>=0 and data[row-1][i] == "#":
                 start_direction+='u'
