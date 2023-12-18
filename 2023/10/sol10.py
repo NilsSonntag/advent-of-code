@@ -48,46 +48,6 @@ def neighbors_to_add(current_position: Tuple[int, int], data: Any) -> bool:
     else: fits.append(False)
     return fits
 
-"""
-def get_graph_of_pipes(current_position: Tuple[int, int], data: Any) -> Dict[Tuple[int, int], List[Tuple[int, int]]]:
-    Return the position where we first find a loop from start to start
-    visited = []
-    stack=[]
-    graph = {}
-    
-    while current_position not in visited:
-        graph[current_position] = []
-        visited.append(current_position)
-        x,y = current_position
-        print(x,y)
-
-        #find all fitting neighbors
-        adders = neighbors_to_add(current_position,data)
-        print(adders)
-
-        #for all the found fitting neighbors, add them to the stack
-        for i in range(0,4):
-            if adders[i]:
-                if i==0:
-                    graph[current_position].append((x+1,y))
-                    stack.append((x+1,y))
-                if i==1:
-                    graph[current_position].append((x,y+1))
-                    stack.append((x,y+1))
-                if i==2:
-                    graph[current_position].append((x-1,y))
-                    stack.append((x-1,y))
-                if i==3:
-                    graph[current_position].append((x,y-1))
-                    stack.append((x,y-1))
-
-        #take the next position from the stack
-        current_position= stack.pop()
-        
-    print(graph)
-    return graph
-"""
-
 def get_graph_of_pipes(data: Any) -> Dict[Tuple[int, int], List[Tuple[int, int]]]:
     #Return a graph of the pipes.
     graph = {}
@@ -109,30 +69,13 @@ def get_graph_of_pipes(data: Any) -> Dict[Tuple[int, int], List[Tuple[int, int]]
                 graph[(x,y)].append((x-1,y))
             if adders[3]:
                 graph[(x,y)].append((x,y-1))
-    
     return graph
-
-def find_shortest_path(graph, start, end, path=[]):
-        path = path + [start]
-        if start == end:
-            return path
-        if start not in graph:
-            return None
-        shortest = None
-        for node in graph[start]:
-            if node not in path:
-                new_path = find_shortest_path(graph, node, end, path)
-                if new_path:
-                    if not shortest or len(new_path) < len(shortest):
-                        shortest = new_path
-        return shortest
 
 
 def part1(data: Any) -> int:
     """Solve part 1 of the puzzle for the given data and return the solution."""
     pipe_graph = get_graph_of_pipes(data)
     only_connected = pipe_graph.copy()
-    
     for position in pipe_graph:
         if len(pipe_graph[position]) < 2:
             del only_connected[position]
@@ -161,43 +104,6 @@ def rows_to_columns(data: Any) -> Any:
     """Return the data structure with rows and columns swapped."""
     return ["".join(row) for row in zip(*data)]
 
-""" 
-def count_hashtags(data: Any) -> List[List[int]]:
-    #Return the number of hashtags in the data structure
-    counted = [[0 for col in range(data[0])] for row in range(data)]
-    for row in data:
-        for elem in row:
-            if elem == "#":
-                counted[data.index(row),row.index(elem):] += 1
-    return counted
-"""
-
-def possible_in(data: Any) -> List[Tuple[int, int]]:
-    result = []
-    #counted_hashtags = count_hashtags(data)
-    
-    for line in data:
-        parts = line.split('#')
-        
-        columns = []
-        for i in range(len(parts)):
-            current_col = sum(len(parts[j])+1 for j in range(0,i))
-            if parts[i] != '':
-                columns.append(current_col)
-        
-        parts = list(filter(lambda a: a != '', parts)) 
-        
-        i = 1
-        while i in range(len(parts)):
-            #calc current_col 
-            current_col = columns[i] #TODO: check if this is correct 
-            
-            for a in range(len(parts[i])):
-                result.append((data.index(line), current_col+a))
-            
-            i += 2
-    
-    return result
 
 def circuit_to_hashtags(data: list[str], circuit: dict[tuple[int,int],list[tuple[int,int]]]) -> list[str]:
     only_connected = remove_not_in_cycle(circuit)
@@ -208,68 +114,59 @@ def circuit_to_hashtags(data: list[str], circuit: dict[tuple[int,int],list[tuple
     
     return data
 
-def part2_first(data: Any) -> int:
-    """Solve part 2 of the puzzle for the given data and return the solution."""
-    data = circuit_to_hashtags(data, get_graph_of_pipes(data))
-    
-    possible_in_rows = possible_in(data)
-    
-    cols = rows_to_columns(data)
-    temp = possible_in(cols)
-    possible_in_cols = [(y,x) for x,y in temp]
-    
-    sum_of_inner = 0
-    
-    for position in possible_in_rows:
-            if position in possible_in_cols:
-                print(position)
-                sum_of_inner += 1
-    
-    return sum_of_inner
 
-def check_elem_inside(data,row,column):
-    #cols = rows_to_columns(data)
-    num_border_crosses = 0
-    i=0
-    if data[row][column] == "#": return False
-    while i < column:
-        if not data[row][i] == "#":
-            i+=1
-        elif data[row][i] == "#":
-            #go till last # of this block
-            l=1
-            while i+l<len(data[row]) and data[row][i+l] == "#":
-                l+=1
-            #check if this block is a border_crossing
-            start_direction, end_direction = '', ''
-            if row-1>=0 and data[row-1][i] == "#":
-                start_direction+='u'
-            if row+1<len(data) and data[row+1][i] == "#": start_direction += 'd'
-            if row-1>0 and data[row-1][i+l] == "#":
-                end_direction += 'u'
-            if row+1<len(data) and data[row+1][i+l-1] == "#":
-                end_direction += 'd'
-            if start_direction != end_direction:
-                num_border_crosses += 1
-                print("border_cross at",row,i)
-            elif start_direction==end_direction and start_direction=='ud':
-                num_border_crosses +=1
-                l=1
-            i+=l
-    return (num_border_crosses % 2 == 1)
+def shoelace(visited: list[tuple[int,int]]) -> int:
+    area = sum(visited[i][0] * (visited[i - 1][1] - visited[(i + 1) % len(visited)][1]) for i in range(len(visited)))
+    area = abs(area)//2
+    return int(area)
+
+def find_position_of_first_occurance(data: Any, elem: str) -> Tuple[int, int]:
+    for row in data:
+        if not row.find(elem)==-1:
+            return (row.index(elem), data.index(row))
+    return (-1, -1)
+
+def find_path(data: Any, start_position: Tuple[int, int]) -> List[Tuple[int, int]]:
+    pipe_graph = get_graph_of_pipes(data)
+    only_connected = pipe_graph.copy()
+    for position in pipe_graph:
+        if len(pipe_graph[position]) < 2:
+            del only_connected[position]
+    print(only_connected)
+    path = []
+    #1.find a position to start from 2.from there choose one neighbor and go there 3. from there always choose the neighbor that is not the one you came from until you reach the starting position again
+    #start_position = find_position_of_first_occurance(data, "S")
+    path.append(start_position)
+    path.append(only_connected[start_position][0])
+    closed = False
+    while not closed:
+        current_position = path[-1]
+        for x in only_connected[current_position]:
+            if x != path[-2] and x != path[0]:
+                path.append(x)
+                break
+        break
+    print(path)
+    return path
+
+def find_corner_points(path : List[Tuple[int,int]]) -> List[Tuple[int, int]]:
+    #remove all points where the point before and after both change the same (x or y coordinate)
+    pass
+        
+    corner_points = []
 
 
 def part2(data: Any) -> int:
-    data = circuit_to_hashtags(data, get_graph_of_pipes(data))
-    cols = rows_to_columns(data)
-    sum_of_inner = 0
-    for row in data:
-        for i in range(len(row)):
-            is_in= check_elem_inside(data,data.index(row),i)*1
-            if is_in: print("inside detected: ", data.index(row),i)
-            sum_of_inner += is_in
+    hashed = circuit_to_hashtags(data, get_graph_of_pipes(data))
+    boundary_points = 0
+    #!!!!!!!!calculate boundary points!!!
+    interior_points = 0
+    path =find_path(data, get_start_position(data))
+    corners = find_corner_points(path)
+    area = shoelace(path)
+    interior_points = area - boundary_points//2 +1
+    return interior_points
 
-    return sum_of_inner
 
 
 def solve(puzzle_input: str) -> Tuple[int, int]:

@@ -142,6 +142,7 @@ def shoelace(visited: list[tuple[int,int]]) -> int:
     return int(area)
 
 directions = {"U": (-1, 0), "D": (1, 0), "L": (0, -1), "R": (0, 1)}
+
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
     boundary_points = 0
