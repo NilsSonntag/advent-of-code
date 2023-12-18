@@ -69,9 +69,9 @@ def dig_out_interior(ground:list[str]) -> list[str]:
     digged = ground.copy()
     for i in range(1,len(ground)):
         border_traversions = 0
-        front_up = False
         j=0
-        while  j in range(len(ground[0])):
+        while j in range(len(ground[0])):
+            #cases where value at j is '.'
             if ground[i][j] == ".":
                 if border_traversions % 2 == 1:
                     digged[i] = replace_at_index(digged[i],j,"#")
@@ -79,12 +79,16 @@ def dig_out_interior(ground:list[str]) -> list[str]:
                 continue
             
             #cases where value at j is '#'
-            
+            #case length of 1
+            if j >= len(ground[0]) or ground[i][j+1] == '.':
+                border_traversions += 1
+                continue
 
+            #case length >1
             front_up = True if (i>0 and ground[i-1][j] =='#') else False
             end =False
             while j<len(ground[0]) and not end:
-                if ground[i][j+1] == '#':
+                if ground[i][j+1] == '.':
                     end =True
                 else:
                     j+=1
@@ -97,14 +101,22 @@ def dig_out_interior(ground:list[str]) -> list[str]:
             
             j+=1
 
-    return ground
+    return digged
+
+def count_hole_size(hole: list[str]) -> int:
+    sum=0
+    for i in hole:
+        sum += i.count('#')
+    return sum
 
 def part1(data: list[tuple[str,int,list]]) -> int:
     """Solve part 1 of the puzzle for the given data and return the solution."""
     visited = dig_plan_to_coords([(elem[0],elem[1]) for elem in data])
     ground = coords_to_ground(visited)
-    ground = dig_out_interior(ground)
-    log_matrix(ground)
+    digged = dig_out_interior(ground)
+    sum = count_hole_size(digged)
+    log_matrix(digged)
+    return sum
     
     
     return 0
