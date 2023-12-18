@@ -118,14 +118,46 @@ def part1(data: list[tuple[str,int,list]]) -> int:
     sum = count_hole_size(digged)
     log_matrix(digged)
     return sum
-    
-    
-    return 0
 
 
+def convert_hexadezimal_to_instruction(data : str) -> tuple[str,int]:
+    ans = data[1:-1]
+    direction = data[-1]
+    #convert ans to int
+    ans = int(ans,16)
+    #convert direction
+    if direction == "0":
+        direction = "R"
+    elif direction == "1":
+        direction = "D"
+    elif direction == "2":
+        direction = "L"
+    elif direction == "3":
+        direction = "U"
+    return (direction,ans)
+
+def shoelace(visited: list[tuple[int,int]]) -> int:
+    area = sum(visited[i][0] * (visited[i - 1][1] - visited[(i + 1) % len(visited)][1]) for i in range(len(visited)))
+    area = abs(area)//2
+    return int(area)
+
+directions = {"U": (-1, 0), "D": (1, 0), "L": (0, -1), "R": (0, 1)}
 def part2(data: Any) -> int:
     """Solve part 2 of the puzzle for the given data and return the solution."""
+    boundary_points = 0
+    interior_points = 0
+    visited=[(0,0)]
+    for i in range(len(data)):
+        direction,distance = convert_hexadezimal_to_instruction(data[i][2])
+        dx, dy = directions[direction]
+        boundary_points += distance
+        px,py = visited[-1]
+        visited.append((px+dx*distance,py+dy*distance))
+    area = shoelace(visited)
+    interior_points = area - boundary_points//2 +1
+    return boundary_points + interior_points
 
+    
 def solve(puzzle_input: str) -> Tuple[int, int]:
     """Solve the puzzle for the given input and return the solutions for part 1 and part 2."""
     data = parse(puzzle_input)
