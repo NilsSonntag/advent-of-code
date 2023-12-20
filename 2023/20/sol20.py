@@ -5,6 +5,15 @@ PUZZLE_DIR = pathlib.Path(__file__).parent
 
 def parse(puzzle_input: str) -> Any:
     """Parse the puzzle input and return a data structure."""
+    lines = puzzle_input.splitlines()
+    parsed = {}
+    for line in lines:
+        splitted = line.split(" -> ")
+        if "broadcaster" in splitted[0]:
+            parsed["broadcaster"] = ("b", splitted[1].split(", "))
+            continue
+        parsed[splitted[0][1:]] = (splitted[0][0], splitted[1].split(", "))
+    return parsed
 
 def part1(data: Any) -> int:
     """Solve part 1 of the puzzle for the given data and return the solution."""

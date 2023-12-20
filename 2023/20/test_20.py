@@ -25,10 +25,9 @@ def example2() -> Any:
     else:
         return sol.parse(puzzle_input)
 
-@pytest.mark.skip(reason="Not implemented")
 def test_parse_example(example: Any):
     """Test that input is parsed properly."""
-    assert example == (["a","b","c"],{"a":("%", ["b"]), "b":("%", ["c"]), "c":("%", ["inv"]), "inv":("&", ["a"])})
+    assert example == {"broadcaster":("b",["a","b","c"]), "a":("%", ["b"]), "b":("%", ["c"]), "c":("%", ["inv"]), "inv":("&", ["a"])}
 
 @pytest.mark.skip(reason="Not implemented")
 def test_part1_example(example: Any):
