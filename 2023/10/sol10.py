@@ -151,9 +151,15 @@ def find_path(data: Any, start_position: Tuple[int, int]) -> List[Tuple[int, int
 
 def find_corner_points(path : List[Tuple[int,int]]) -> List[Tuple[int, int]]:
     #remove all points where the point before and after both change the same (x or y coordinate)
-    pass
-        
     corner_points = []
+    for ind, point in path:
+        #x,y = point
+        px,py = path[ind-1%len(path)]
+        sx,sy = path[ind+1%len(path)]
+        if not px==sx and not py==sy:
+            corner_points.append(point)
+    return corner_points
+
 
 
 def part2(data: Any) -> int:
@@ -163,7 +169,7 @@ def part2(data: Any) -> int:
     interior_points = 0
     path =find_path(data, get_start_position(data))
     corners = find_corner_points(path)
-    area = shoelace(path)
+    area = shoelace(corners)
     interior_points = area - boundary_points//2 +1
     return interior_points
 
