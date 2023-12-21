@@ -107,12 +107,12 @@ def rows_to_columns(data: Any) -> Any:
 
 def circuit_to_hashtags(data: list[str], circuit: dict[tuple[int,int],list[tuple[int,int]]]) -> list[str]:
     only_connected = remove_not_in_cycle(circuit)
-
+    new_data = data.copy()
     for position in only_connected:
         x,y = position
-        data[x]=data[x][:y]+"#"+data[x][y+1:]
+        new_data[x]=new_data[x][:y]+"#"+new_data[x][y+1:]
     
-    return data
+    return new_data
 
 
 def shoelace(visited: list[tuple[int,int]]) -> int:
@@ -132,7 +132,7 @@ def find_path(data: Any, start_position: Tuple[int, int]) -> List[Tuple[int, int
     for position in pipe_graph:
         if len(pipe_graph[position]) < 2:
             del only_connected[position]
-    print(only_connected)
+    print("Connected pieces: ",only_connected)
     path = []
     #1.find a position to start from 2.from there choose one neighbor and go there 3. from there always choose the neighbor that is not the one you came from until you reach the starting position again
     #start_position = find_position_of_first_occurance(data, "S")
@@ -146,7 +146,6 @@ def find_path(data: Any, start_position: Tuple[int, int]) -> List[Tuple[int, int
                 path.append(x)
                 break
         break
-    print(path)
     return path
 
 def find_corner_points(path : List[Tuple[int,int]]) -> List[Tuple[int, int]]:
@@ -154,21 +153,26 @@ def find_corner_points(path : List[Tuple[int,int]]) -> List[Tuple[int, int]]:
     corner_points = []
     for ind, point in path:
         #x,y = point
-        px,py = path[ind-1%len(path)]
-        sx,sy = path[ind+1%len(path)]
+        px,py = path[(ind-1)%len(path)]
+        sx,sy = path[(ind+1)%len(path)]
         if not px==sx and not py==sy:
             corner_points.append(point)
     return corner_points
 
-
+def print_matrix(data : Any)-> None:
+    for line in data:
+        print(line)
 
 def part2(data: Any) -> int:
     hashed = circuit_to_hashtags(data, get_graph_of_pipes(data))
+    print_matrix(hashed)
     boundary_points = 0
     #!!!!!!!!calculate boundary points!!!
     interior_points = 0
     path =find_path(data, get_start_position(data))
+    print("Path: ",path)
     corners = find_corner_points(path)
+    print("Corners: ", corners)
     area = shoelace(corners)
     interior_points = area - boundary_points//2 +1
     return interior_points
