@@ -1,0 +1,10 @@
+DEBUG:root:#######
+DEBUG:root:#######
+DEBUG:root:#######
+DEBUG:root:..#####
+DEBUG:root:..#####
+DEBUG:root:#######
+DEBUG:root:#####..
+DEBUG:root:#######
+DEBUG:root:.######
+DEBUG:root:.######
